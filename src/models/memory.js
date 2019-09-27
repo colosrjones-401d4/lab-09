@@ -5,8 +5,20 @@ const uuid = require('uuid/v4');
 class Model {
 
   constructor() {
+    //Just add schema.. not sure..Let see what happens
+    this.schema = schema;
     this.database = [];
   }
+ //It should work..this is for swagger to find this record..
+    /**
+   * @param  {} entry
+   * @param  {} {letvalid=true;letrecord={};Object.keys(this.schema
+   * @param  {} .forEach(field=>{if(this.schema[field].required
+   * @param  {} {if(entry[field]
+   * @param  {} {record[field]=entry[field];}else{valid=false;}}else{record[field]=entry[field];}}
+   * @param  {}} ;returnvalid?record
+   * @returns undefined
+   */
 
   get(id) {
     let response = id ? this.database.filter((record) => record.id === id) : this.database;
