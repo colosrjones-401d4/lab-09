@@ -1,53 +1,43 @@
 'use strict';
 
-/**
- * API Router Module (V1)
- * Integrates with various models through a common Interface (.get(), .post(), .put(), .delete())
- * @module src/api/v1
- */
-
 const cwd = process.cwd();
 
 const express = require('express');
-// Just add this swagger ui express
-const swagger = require('swagger-ui-express');
 
 const modelFinder = require(`${cwd}/src/middleware/model-finder.js`);
-// Just add this swagger docs
-const swaggerDocs = require(../../docs/config/swagger.json)
 
 const router = express.Router();
 
-// Evaluate the model, dynamically
 router.param('model', modelFinder.load);
 
-// Not sure if it have to remove this. 
-// router.get('/api/v1/models', (request, response) => {
-//   modelFinder.list()
-//     .then(models => response.status(200).json(models));
-// });
+router.get('/api/v1/models', (request, response) => {
+  modelFinder.list()
+    .then(models => response.status(200).json(models));
+});
 
-// router.get('/api/v1/:model/schema', (request, response) => {
-//   response.status(200).json(request.model.jsonSchema());
-// });
+router.get('/api/v1/:model/schema', (request, response) => {
+  response.status(200).json(request.model.jsonSchema());
+});
 
-// API Routes
-router.use('/api/v1/doc', swagger.serve , swagger.setup(swaggerDocs));
+
 router.get('/api/v1/:model', handleGetAll);
 router.post('/api/v1/:model', handlePost);
 router.get('/api/v1/:model/:id', handleGetOne);
 router.put('/api/v1/:model/:id', handlePut);
 router.delete('/api/v1/:model/:id', handleDelete);
 
-
 // Route Handlers
+/**
+ * @typedef GetAllResults
+ * @property {integer} count
+ * @property {Array.<object>} results
+ */
 
 /**
- * Fetches all records from a given model.
- * @example router.get('/api/v1/:model', handleGetAll);
- * @param req {object} Express Request Object (required params: model)
- * @param res {object} Express Response Object
- * @param next {function} Express middleware next()
+ * Get all records of the model type.
+ * @route GET /api/v1/{model}
+ * @param {string} model.path - Model type
+ * @returns {GetAllResults.model} 200 - Results for this model
  */
 function handleGetAll(request,response,next) {
   request.model.get()
@@ -62,51 +52,34 @@ function handleGetAll(request,response,next) {
 }
 
 /**
- * Fetches a single record from a given model.
- * @example router.get('/api/v1/:model/:id', handleGetOne);
- * @param req {object} Express Request Object (required params: model, id)
- * @param res {object} Express Response Object
- * @param next {function} Express middleware next()
+ * Get a single model.
+ * @route GET /model
  */
 function handleGetOne(request,response,next) {
   request.model.get(request.params.id)
-    .then( result => response.status(200).json(result[0]) )
+    .then( result =>{
+      if(result.length === 0) {
+        response.sendStatus(404);
+        return;
+      }
+
+      response.status(200).json(result[0]);
+    })
     .catch( next );
 }
 
-/**
- * Creates a single record in a given model.
- * @example router.post('/api/v1/:model', handlePost);
- * @param req {object} Express Request Object (required params: req.model)
- * @param res {object} Express Response Object
- * @param next {function} Express middleware next()
- */
 function handlePost(request,response,next) {
   request.model.create(request.body)
     .then( result => response.status(200).json(result) )
     .catch( next );
 }
 
-/**
- * Updates a single record in a given model.
- * @example router.put('/api/v1/:model/:id', handlePut);
- * @param req {object} Express Request Object (required params: model, id)
- * @param res {object} Express Response Object
- * @param next {function} Express middleware next()
- */
 function handlePut(request,response,next) {
   request.model.update(request.params.id, request.body)
     .then( result => response.status(200).json(result) )
     .catch( next );
 }
 
-/**
- * Deletes a single record from a given model.
- * @example router.delete('/api/v1/:model/:id', handleDelete);
- * @param req {object} Express Request Object (required params: model, id)
- * @param res {object} Express Response Object
- * @param next {function} Express middleware next()
- */
 function handleDelete(request,response,next) {
   request.model.delete(request.params.id)
     .then( result => response.status(200).json(result) )
