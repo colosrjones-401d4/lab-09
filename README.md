@@ -3,7 +3,7 @@
 ### Steven Jones
 
 ### Links and Resources
-* [PR](https://github.com/401)
+* [PR](https://github.com/colosrjones-401d4/lab-09/pull/1/)
 
 [![Build Status](https:)](http)
 

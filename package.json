@@ -1,7 +1,7 @@
 {
   "name": "api-server-solution",
   "version": "1.0.0",
-  "description": "",
+  "description": "### Steven Jones",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
@@ -27,8 +27,21 @@
     "mongoose": "^5.6.2",
     "mongoose-schema-jsonschema": "^1.2.1",
     "morgan": "^1.9.1",
+    "node": "^12.11.0",
     "require-directory": "^2.1.1",
     "supertest": "^4.0.2",
     "uuid": "^3.3.2"
-  }
+  },
+  "directories": {
+    "doc": "docs"
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/colosrjones-401d4/lab-09.git"
+  },
+  "bugs": {
+    "url": "https://github.com/colosrjones-401d4/lab-09/issues"
+  },
+  "homepage": "https://github.com/colosrjones-401d4/lab-09#readme"
 }
